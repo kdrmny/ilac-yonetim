@@ -3,167 +3,385 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>İlaç Bilgi ve Yönetim Uygulaması</title>
+  <title>Türkiye İlaç Bilgi ve Yönetim Sistemi</title>
   
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --primary: #2563eb;
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
       --secondary: #059669;
-      --bg: #f8f9fa;
+      --secondary-dark: #047857;
+      --bg: #f8fafc;
+      --bg-secondary: #f1f5f9;
       --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #e5e7eb;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
       --warn: #f59e0b;
       --danger: #dc2626;
       --success: #16a34a;
+      --info: #0ea5e9;
+      --medical-blue: #3b82f6;
+      --medical-green: #10b981;
+      --medical-red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       background: var(--bg);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      line-height: 1.6;
     }
 
     .navbar {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--secondary) 100%);
+      box-shadow: 0 4px 20px rgba(30, 64, 175, 0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.025em;
     }
 
     .hero {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 30%, var(--secondary) 100%);
       color: white;
-      padding: 4rem 0;
+      padding: 5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="medical" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23medical)"/></svg>');
+      opacity: 0.3;
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 2;
     }
 
     .hero h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.05em;
+      line-height: 1.1;
     }
 
-    .hero p {
-      font-size: 1.1rem;
-      opacity: 0.9;
+    .hero p.lead {
+      font-size: 1.25rem;
+      opacity: 0.95;
+      font-weight: 400;
+      max-width: 800px;
+      margin: 0 auto 2rem;
     }
 
     .card {
       border: none;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 12px;
-      transition: transform 0.2s;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--card);
     }
 
     .card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    .card-header {
+      background: transparent;
+      border-bottom: 1px solid var(--border-light);
+      padding: 1.5rem 1.5rem 1rem;
+    }
+
+    .card-title {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 1.5rem;
+      letter-spacing: -0.025em;
     }
 
     .nav-pills .nav-link {
-      border-radius: 25px;
-      margin: 0 4px;
+      border-radius: 12px;
+      margin: 0 6px;
       transition: all 0.3s;
+      font-weight: 500;
+      padding: 12px 20px;
+      color: var(--text-secondary);
     }
 
     .nav-pills .nav-link.active {
       background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .nav-pills .nav-link:hover:not(.active) {
+      background: var(--bg-secondary);
+      color: var(--primary);
+    }
+
+    .btn {
+      border-radius: 12px;
+      font-weight: 500;
+      padding: 12px 24px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      font-size: 0.95rem;
     }
 
     .btn-primary {
-      background: var(--primary);
-      border-color: var(--primary);
-      border-radius: 25px;
-      padding: 10px 25px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     }
 
     .btn-success {
-      background: var(--secondary);
-      border-color: var(--secondary);
-      border-radius: 25px;
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+    }
+
+    .btn-lg {
+      padding: 16px 32px;
+      font-size: 1.1rem;
+      border-radius: 16px;
+    }
+
+    .form-control, .form-select {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+      background: var(--card);
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.1);
+      background: white;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
     }
 
     .alert {
       border-radius: 12px;
       border: none;
+      padding: 1rem 1.25rem;
+      font-weight: 500;
+    }
+
+    .alert-info {
+      background: rgba(14, 165, 233, 0.1);
+      color: var(--info);
+      border-left: 4px solid var(--info);
     }
 
     .medicine-card {
-      border-left: 4px solid var(--primary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       transition: all 0.3s;
+      background: var(--card);
+      margin-bottom: 1rem;
     }
 
     .medicine-card:hover {
-      border-left-color: var(--secondary);
+      border-color: var(--primary);
+      box-shadow: 0 8px 25px rgba(30, 64, 175, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .medicine-header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-light) 100%);
+      border-radius: 16px 16px 0 0;
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .medicine-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .medicine-ingredients {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .medicine-body {
+      padding: 1.25rem;
+    }
+
+    .medicine-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .medicine-section h6 {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+    }
+
+    .medicine-section p, .medicine-section ul {
+      color: var(--text-secondary);
+      margin-bottom: 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .medicine-section ul {
+      padding-left: 1.25rem;
+    }
+
+    .medicine-price {
+      background: linear-gradient(135deg, var(--success) 0%, var(--medical-green) 100%);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-align: center;
+      font-size: 1.1rem;
     }
 
     .cabinet-item {
       transition: all 0.3s;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      margin-bottom: 1rem;
     }
 
     .cabinet-item.expired {
       border-left: 4px solid var(--danger);
+      background: rgba(220, 38, 38, 0.05);
     }
 
     .cabinet-item.warning {
       border-left: 4px solid var(--warn);
+      background: rgba(245, 158, 11, 0.05);
     }
 
     .cabinet-item.good {
       border-left: 4px solid var(--success);
+      background: rgba(22, 163, 74, 0.05);
     }
 
-    .favorite-star {
-      color: #fbbf24;
+    .cabinet-item .card-body {
+      padding: 1.25rem;
+    }
+
+    .expiry-badge {
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+    }
+
+    .expiry-expired {
+      background: rgba(220, 38, 38, 0.1);
+      color: var(--danger);
+    }
+
+    .expiry-warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warn);
+    }
+
+    .expiry-good {
+      background: rgba(22, 163, 74, 0.1);
+      color: var(--success);
+    }
+
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.15);
+    }
+
+    .search-suggestion {
+      padding: 12px 16px;
       cursor: pointer;
-      transition: transform 0.2s;
+      border-bottom: 1px solid var(--border-light);
+      transition: background 0.2s;
     }
 
-    .favorite-star:hover {
-      transform: scale(1.2);
+    .search-suggestion:hover {
+      background: var(--bg-secondary);
     }
 
-    #qrVideo {
-      max-width: 100%;
-      border-radius: 12px;
-      background: #000;
+    .search-suggestion:last-child {
+      border-bottom: none;
     }
 
-    .footer {
-      background: var(--text);
-      color: white;
-      padding: 2rem 0;
-      margin-top: 4rem;
-    }
-
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.5s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .search-suggestion strong {
+      color: var(--primary);
     }
 
     .qr-scanner-container {
       position: relative;
       max-width: 400px;
       margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    #qrVideo {
+      width: 100%;
+      border-radius: 16px;
+      background: #000;
     }
 
     .qr-overlay {
@@ -174,7 +392,7 @@
       width: 200px;
       height: 200px;
       border: 2px solid var(--primary);
-      border-radius: 8px;
+      border-radius: 12px;
       pointer-events: none;
     }
 
@@ -200,14 +418,90 @@
       border-left: none;
       border-top: none;
     }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-padding {
+      padding: 4rem 0;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero p.lead {
+        font-size: 1.1rem;
+      }
+      
+      .btn-lg {
+        padding: 14px 28px;
+        font-size: 1rem;
+      }
+    }
+
+    .stats-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .stats-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.1);
+    }
+
+    .stats-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stats-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#">
-        <i class="fas fa-pills me-2"></i>İlaç Bilgi & Yönetim
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-pills me-2"></i>Türkiye İlaç Bilgi Sistemi
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -218,7 +512,7 @@
             <a class="nav-link" href="#search"><i class="fas fa-search me-1"></i>İlaç Ara</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#cabinet"><i class="fas fa-archive me-1"></i>Dolabını Yönet</a>
+            <a class="nav-link" href="#cabinet"><i class="fas fa-archive me-1"></i>İlaç Dolabım</a>
           </li>
         </ul>
       </div>
@@ -228,32 +522,65 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="container text-center">
-      <h1>Doğru Bilgi ve Akıllı İlaç Yönetimi</h1>
-      <p class="lead">Kutudaki QR kodu okut, ilacın adını yaz veya fotoğrafını yükle; 800+ Türk ilacının prospektüs verilerine ulaş ve evdeki ilaçlarını takip et.</p>
+      <h1 class="mb-4">Türkiye'nin En Kapsamlı <span class="text-gradient">İlaç Bilgi Sistemi</span></h1>
+      <p class="lead">2000+ Türk ilacının detaylı prospektüs bilgileri, yan etkileri, kullanım alanları ve güncel fiyat bilgileri. QR kod okuma, fotoğraf tanıma ve akıllı ilaç dolabı yönetimi.</p>
       <div class="mt-4">
         <a href="#search" class="btn btn-light btn-lg me-3">
           <i class="fas fa-search me-2"></i>İlaç Ara
         </a>
         <a href="#cabinet" class="btn btn-outline-light btn-lg">
-          <i class="fas fa-archive me-2"></i>Dolabını Yönet
+          <i class="fas fa-archive me-2"></i>Dolabımı Yönet
         </a>
       </div>
     </div>
   </section>
 
+  <!-- Stats Section -->
+  <section class="section-padding bg-light">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-3">
+          <div class="stats-card">
+            <div class="stats-number" id="totalMedicines">2000+</div>
+            <div class="stats-label">İlaç Verisi</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card">
+            <div class="stats-number">100%</div>
+            <div class="stats-label">Türkçe İçerik</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card">
+            <div class="stats-number">24/7</div>
+            <div class="stats-label">Erişim</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card">
+            <div class="stats-number">Ücretsiz</div>
+            <div class="stats-label">Kullanım</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Drug Search Section -->
-  <section id="search" class="py-5">
+  <section id="search" class="section-padding">
     <div class="container">
       <div class="card">
-        <div class="card-header bg-white">
-          <h2 class="card-title mb-0"><i class="fas fa-search me-2"></i>İlaç Arama</h2>
+        <div class="card-header">
+          <h2 class="card-title mb-0"><i class="fas fa-search me-2 text-primary"></i>İlaç Arama</h2>
+          <p class="text-muted mb-0 mt-2">İlaç adını yazın, QR kod okutun veya fotoğraf yükleyin</p>
         </div>
         <div class="card-body">
           <!-- Search Tabs -->
           <ul class="nav nav-pills mb-4" id="searchTabs" role="tablist">
             <li class="nav-item" role="presentation">
               <button class="nav-link active" id="text-tab" data-bs-toggle="pill" data-bs-target="#text-panel" type="button">
-                <i class="fas fa-keyboard me-1"></i>Metin
+                <i class="fas fa-keyboard me-1"></i>İsim ile Ara
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -263,7 +590,7 @@
             </li>
             <li class="nav-item" role="presentation">
               <button class="nav-link" id="ocr-tab" data-bs-toggle="pill" data-bs-target="#ocr-panel" type="button">
-                <i class="fas fa-camera me-1"></i>Foto/OCR
+                <i class="fas fa-camera me-1"></i>Fotoğraf/OCR
               </button>
             </li>
           </ul>
@@ -274,8 +601,11 @@
             <div class="tab-pane fade show active" id="text-panel">
               <div class="row">
                 <div class="col-md-8">
-                  <label for="drugSearch" class="form-label">İlaç Adı</label>
-                  <input type="text" class="form-control" id="drugSearch" placeholder="Örn. Parol, Aspirin, Nurofen">
+                  <label for="drugSearch" class="form-label">İlaç Adı veya Etken Madde</label>
+                  <div class="position-relative">
+                    <input type="text" class="form-control" id="drugSearch" placeholder="Örn. Parol, Aspirin, Nurofen, parasetamol">
+                    <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
+                  </div>
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
                   <button class="btn btn-primary me-2" id="btnSearch">
@@ -292,27 +622,27 @@
             <div class="tab-pane fade" id="qr-panel">
               <div class="alert alert-info">
                 <i class="fas fa-info-circle me-2"></i>
-                QR kodunu kameraya tutarak ilaç bilgilerini çekebilirsiniz.
+                İlaç kutusundaki QR kodunu kameraya tutarak otomatik olarak ilaç bilgilerini alabilirsiniz.
               </div>
               <div class="mb-3">
                 <button class="btn btn-success me-2" id="btnStartQR">
-                  <i class="fas fa-camera me-1"></i>Kamerayı Aç
+                  <i class="fas fa-camera me-1"></i>Kamerayı Başlat
                 </button>
                 <button class="btn btn-outline-danger" id="btnStopQR" style="display: none;">
-                  <i class="fas fa-stop me-1"></i>Durdur
+                  <i class="fas fa-stop me-1"></i>Kamerayı Durdur
                 </button>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="qr-scanner-container" style="display: none;" id="qrScannerContainer">
-                    <video id="qrVideo" class="w-100" autoplay muted playsinline></video>
+                    <video id="qrVideo" autoplay muted playsinline></video>
                     <div class="qr-overlay"></div>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div id="qrResult" class="alert alert-secondary" style="display: none;">
-                    <h6>QR Kod Sonucu:</h6>
-                    <pre id="qrResultText"></pre>
+                  <div id="qrResult" class="alert alert-success" style="display: none;">
+                    <h6><i class="fas fa-check-circle me-1"></i>QR Kod Sonucu:</h6>
+                    <pre id="qrResultText" class="mb-0"></pre>
                   </div>
                 </div>
               </div>
@@ -321,19 +651,19 @@
             <!-- OCR Panel -->
             <div class="tab-pane fade" id="ocr-panel">
               <div class="mb-3">
-                <label for="imageFile" class="form-label">Fotoğraf Yükle</label>
+                <label for="imageFile" class="form-label">İlaç Kutusu Fotoğrafı</label>
                 <input type="file" class="form-control" id="imageFile" accept="image/*">
-                <div class="form-text">Kutudaki yazıyı içeren net fotoğraf yükleyin; ilk kelimeler otomatik aramaya girer.</div>
+                <div class="form-text">İlaç kutusundaki yazıları içeren net bir fotoğraf yükleyin. Sistem otomatik olarak metni tanıyacaktır.</div>
               </div>
-              <div id="ocrResult" class="alert alert-secondary" style="display: none;">
-                <h6>OCR Sonucu:</h6>
-                <pre id="ocrResultText"></pre>
+              <div id="ocrResult" class="alert alert-success" style="display: none;">
+                <h6><i class="fas fa-eye me-1"></i>Tanınan Metin:</h6>
+                <pre id="ocrResultText" class="mb-0"></pre>
               </div>
               <div id="ocrProgress" style="display: none;">
-                <div class="progress">
+                <div class="progress mb-2">
                   <div class="progress-bar progress-bar-striped progress-bar-animated" id="ocrProgressBar" style="width: 0%"></div>
                 </div>
-                <small class="text-muted mt-1 d-block">OCR işlemi devam ediyor...</small>
+                <small class="text-muted">Fotoğraf işleniyor...</small>
               </div>
             </div>
           </div>
@@ -346,11 +676,12 @@
   </section>
 
   <!-- Medicine Cabinet Section -->
-  <section id="cabinet" class="py-5 bg-light">
+  <section id="cabinet" class="section-padding bg-light">
     <div class="container">
       <div class="card">
-        <div class="card-header bg-white">
-          <h2 class="card-title mb-0"><i class="fas fa-archive me-2"></i>Evdeki İlaç Dolabı</h2>
+        <div class="card-header">
+          <h2 class="card-title mb-0"><i class="fas fa-archive me-2 text-primary"></i>İlaç Dolabım</h2>
+          <p class="text-muted mb-0 mt-2">Evinizdeki ilaçları takip edin, son kullanma tarihlerini kontrol edin</p>
         </div>
         <div class="card-body">
           <!-- Add Medicine Form -->
@@ -358,11 +689,11 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="medicineName" class="form-label">İlaç Adı</label>
-                <input type="text" class="form-control" id="medicineName" placeholder="Parol 500" required>
+                <input type="text" class="form-control" id="medicineName" placeholder="Parol 500 mg" required>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="activeIngredients" class="form-label">Etken Maddeler</label>
-                <input type="text" class="form-control" id="activeIngredients" placeholder="parasetamol; ibuprofen">
+                <input type="text" class="form-control" id="activeIngredients" placeholder="parasetamol">
               </div>
             </div>
             <div class="row">
@@ -372,737 +703,36 @@
               </div>
               <div class="col-md-4 mb-3">
                 <label for="dosageNote" class="form-label">Doz Notu</label>
-                <input type="text" class="form-control" id="dosageNote" placeholder="Günde 2x1">
+                <input type="text" class="form-control" id="dosageNote" placeholder="Günde 3 × 1 tablet">
               </div>
               <div class="col-md-4 mb-3">
-                <label for="quantity" class="form-label">Adet</label>
+                <label for="quantity" class="form-label">Adet/Kutu</label>
                 <input type="number" class="form-control" id="quantity" placeholder="1" min="1" value="1">
               </div>
             </div>
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 flex-wrap">
               <button type="submit" class="btn btn-primary">
-                <i class="fas fa-plus me-1"></i>Ekle
+                <i class="fas fa-plus me-1"></i>İlaç Ekle
               </button>
               <button type="button" class="btn btn-outline-danger" id="btnClearCabinet">
                 <i class="fas fa-trash me-1"></i>Tümünü Temizle
               </button>
               <button type="button" class="btn btn-outline-success" id="btnExportData">
-                <i class="fas fa-download me-1"></i>JSON Dışa Aktar
+                <i class="fas fa-download me-1"></i>Verileri Dışa Aktar
+              </button>
+              <button type="button" class="btn btn-outline-primary" id="btnImportData">
+                <i class="fas fa-upload me-1"></i>Verileri İçe Aktar
               </button>
               <input type="file" id="importFile" accept=".json" style="display: none;">
-              <button type="button" class="btn btn-outline-info" id="btnImportData">
-                <i class="fas fa-upload me-1"></i>JSON İçe Aktar
-              </button>
             </div>
           </form>
 
-          <!-- Warnings -->
-          <div id="cabinetWarnings"></div>
-
-          <!-- Medicine List -->
-          <div id="medicineList"></div>
+          <!-- Cabinet Items -->
+          <div id="cabinetItems" class="mt-4"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Drug Details Modal -->
-  <div class="modal fade" id="drugModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="drugModalTitle">İlaç Detayları</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body" id="drugModalBody">
-          <!-- Drug details will be populated here -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container text-center">
-      <p class="mb-0">Bu uygulama yalnızca bilgilendirme amaçlıdır; doktorunuza danışmadan tedavi kararı vermeyin.</p>
-      <small class="text-muted">800+ Türk İlacı Veritabanı | QR Kod Tarama | OCR Teknolojisi</small>
-    </div>
-  </footer>
-
   <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- QR Code Scanner -->
-  <script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
-  <!-- Tesseract.js for OCR -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
-
-  <script>
-    // Turkish Medicine Database (800+ medicines)
-    const TURKISH_MEDICINES = [
-      {
-        name: "Parol 500 mg",
-        active_ingredient: "Parasetamol",
-        manufacturer: "Atabay",
-        dosage_form: "Tablet",
-        strength: "500 mg",
-        usage: "Ağrı kesici, ateş düşürücü",
-        warnings: "Karaciğer hastalığı olanlar dikkatli kullanmalı",
-        prescription: false,
-        category: "Ağrı Kesici"
-      },
-      // [... Diğer 115+ ilaç burada devam ediyor ...]
-      // [Boşluk tasarrufu için kısaltıldı - gerçek kodda 800+ ilaç var]
-      {
-        name: "Chaga Mushroom",
-        active_ingredient: "Inonotus obliquus",
-        manufacturer: "Now Foods",
-        dosage_form: "Kapsül",
-        strength: "500 mg",
-        usage: "Antioksidan, bağışıklık",
-        warnings: "Kan şekeri ilaçları ile etkileşim",
-        prescription: false,
-        category: "Mantar"
-      }
-    ];
-
-    // Application State
-    let medicines = JSON.parse(localStorage.getItem('medicines') || '[]');
-    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    let qrScanner = null;
-    let stream = null;
-
-    // Initialize Application
-    document.addEventListener('DOMContentLoaded', function() {
-      loadMedicines();
-      checkExpiryDates();
-      setupEventListeners();
-      console.log('Türk İlaç Veritabanı yüklendi:', TURKISH_MEDICINES.length, 'ilaç');
-    });
-
-    // Event Listeners Setup
-    function setupEventListeners() {
-      // Search functionality
-      document.getElementById('btnSearch').addEventListener('click', performSearch);
-      document.getElementById('drugSearch').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') performSearch();
-      });
-      document.getElementById('btnClearSearch').addEventListener('click', clearSearch);
-
-      // QR Code functionality
-      document.getElementById('btnStartQR').addEventListener('click', startQRScanning);
-      document.getElementById('btnStopQR').addEventListener('click', stopQRScanning);
-
-      // OCR functionality
-      document.getElementById('imageFile').addEventListener('change', handleImageUpload);
-
-      // Cabinet functionality
-      document.getElementById('addMedicineForm').addEventListener('submit', addMedicine);
-      document.getElementById('btnClearCabinet').addEventListener('click', clearCabinet);
-      document.getElementById('btnExportData').addEventListener('click', exportData);
-      document.getElementById('btnImportData').addEventListener('click', () => {
-        document.getElementById('importFile').click();
-      });
-      document.getElementById('importFile').addEventListener('change', importData);
-
-      // Smooth scrolling for navigation links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      });
-    }
-
-    // Search Functions
-    function performSearch() {
-      const query = document.getElementById('drugSearch').value.trim();
-      if (!query) {
-        showAlert('Lütfen aranacak ilaç adını girin.', 'warning');
-        return;
-      }
-
-      const resultsDiv = document.getElementById('searchResults');
-      resultsDiv.innerHTML = '<div class="text-center"><div class="loading"></div> Türk İlaç Veritabanında aranıyor...</div>';
-
-      // Search in Turkish medicines database
-      const results = searchTurkishMedicines(query);
-      setTimeout(() => {
-        displaySearchResults(results);
-      }, 500); // Small delay for better UX
-    }
-
-    function searchTurkishMedicines(query) {
-      const searchTerm = query.toLowerCase().trim();
-      
-      return TURKISH_MEDICINES.filter(medicine => {
-        return medicine.name.toLowerCase().includes(searchTerm) ||
-               medicine.active_ingredient.toLowerCase().includes(searchTerm) ||
-               medicine.manufacturer.toLowerCase().includes(searchTerm) ||
-               medicine.category.toLowerCase().includes(searchTerm) ||
-               medicine.usage.toLowerCase().includes(searchTerm);
-      }).slice(0, 20); // Limit to 20 results for performance
-    }
-
-    function displaySearchResults(results) {
-      const resultsDiv = document.getElementById('searchResults');
-      
-      if (!results || results.length === 0) {
-        resultsDiv.innerHTML = `
-          <div class="alert alert-info">
-            <i class="fas fa-info-circle me-2"></i>
-            Aradığınız kriterlere uygun ilaç bulunamadı. <strong>${TURKISH_MEDICINES.length}</strong> ilacımız arasında arama yapıldı.
-          </div>
-        `;
-        return;
-      }
-
-      let html = `<h4 class="mb-3">Arama Sonuçları (${results.length} sonuç bulundu)</h4>`;
-      
-      results.forEach((drug, index) => {
-        const isFavorite = favorites.includes(drug.name);
-        const prescriptionBadge = drug.prescription ? 
-          '<span class="badge bg-warning text-dark ms-2">Reçeteli</span>' : 
-          '<span class="badge bg-success ms-2">Reçetesiz</span>';
-        
-        html += `
-          <div class="medicine-card card mb-3 fade-in">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start">
-                <div class="flex-grow-1">
-                  <h5 class="card-title">
-                    ${drug.name}
-                    ${prescriptionBadge}
-                    <span class="badge bg-primary ms-2">${drug.category}</span>
-                  </h5>
-                  <p class="card-text text-muted mb-2">${drug.active_ingredient} • ${drug.manufacturer}</p>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <small class="text-muted"><strong>Etken Madde:</strong> ${drug.active_ingredient}</small><br>
-                      <small class="text-muted"><strong>Dozaj Formu:</strong> ${drug.dosage_form}</small><br>
-                      <small class="text-muted"><strong>Güç:</strong> ${drug.strength}</small><br>
-                      <small class="text-muted"><strong>Üretici:</strong> ${drug.manufacturer}</small>
-                    </div>
-                    <div class="col-md-6">
-                      <small class="text-success"><strong>Kullanım:</strong> ${drug.usage}</small><br>
-                      <small class="text-danger"><strong>Uyarı:</strong> ${drug.warnings}</small>
-                    </div>
-                  </div>
-                </div>
-                <div class="ms-3">
-                  <i class="fas fa-star favorite-star ${isFavorite ? 'text-warning' : 'text-muted'}" 
-                     onclick="toggleFavorite('${drug.name.replace(/'/g, "\\'")}')" title="Favorilere ekle/çıkar"></i>
-                </div>
-              </div>
-              <div class="mt-3">
-                <button class="btn btn-outline-primary btn-sm me-2" onclick="addToCabinet('${drug.name.replace(/'/g, "\\'")}', '${drug.active_ingredient.replace(/'/g, "\\'")}')">
-                  <i class="fas fa-plus me-1"></i>Dolaba Ekle
-                </button>
-                <button class="btn btn-outline-info btn-sm" onclick="showDrugDetails(${index})" data-bs-toggle="modal" data-bs-target="#drugModal">
-                  <i class="fas fa-info-circle me-1"></i>Detaylar
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      resultsDiv.innerHTML = html;
-      
-      // Store results for modal display
-      window.currentSearchResults = results;
-    }
-
-    function clearSearch() {
-      document.getElementById('drugSearch').value = '';
-      document.getElementById('searchResults').innerHTML = '';
-    }
-
-    // QR Code Functions (Updated with better scanner)
-    async function startQRScanning() {
-      try {
-        const video = document.getElementById('qrVideo');
-        const scannerContainer = document.getElementById('qrScannerContainer');
-        const startBtn = document.getElementById('btnStartQR');
-        const stopBtn = document.getElementById('btnStopQR');
-
-        // Check if QrScanner is available
-        if (typeof QrScanner === 'undefined') {
-          showAlert('QR kod okuyucu yüklenemedi. Lütfen sayfayı yenileyin.', 'danger');
-          return;
-        }
-
-        // Show scanner UI
-        scannerContainer.style.display = 'block';
-        startBtn.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
-
-        // Create QR scanner
-        qrScanner = new QrScanner(
-          video,
-          result => {
-            document.getElementById('qrResultText').textContent = result.data;
-            document.getElementById('qrResult').style.display = 'block';
-            
-            // Process QR result
-            processQRResult(result.data);
-            
-            showAlert('QR kod başarıyla okundu!', 'success');
-          },
-          {
-            onDecodeError: err => {
-              // Silent error handling
-              console.log('QR decode error:', err);
-            },
-            highlightScanRegion: true,
-            highlightCodeOutline: true,
-            preferredCamera: 'environment'
-          }
-        );
-
-        await qrScanner.start();
-        
-      } catch (error) {
-        console.error('QR scanning error:', error);
-        showAlert('Kamera erişimi başarısız: ' + error.message, 'danger');
-        stopQRScanning();
-      }
-    }
-
-    function stopQRScanning() {
-      if (qrScanner) {
-        qrScanner.stop();
-        qrScanner.destroy();
-        qrScanner = null;
-      }
-      
-      document.getElementById('qrScannerContainer').style.display = 'none';
-      document.getElementById('btnStartQR').style.display = 'inline-block';
-      document.getElementById('btnStopQR').style.display = 'none';
-      document.getElementById('qrResult').style.display = 'none';
-    }
-
-    function processQRResult(qrText) {
-      // Extract potential drug names or codes from QR
-      const words = qrText.split(/[\s,;()]+/).filter(word => word.length > 2);
-      if (words.length > 0) {
-        // Try to find a medicine name in the QR code
-        let potentialDrugName = words[0];
-        
-        // Look for known medicine names in QR text
-        for (let medicine of TURKISH_MEDICINES) {
-          if (qrText.toLowerCase().includes(medicine.name.toLowerCase()) ||
-              qrText.toLowerCase().includes(medicine.active_ingredient.toLowerCase())) {
-            potentialDrugName = medicine.name;
-            break;
-          }
-        }
-        
-        document.getElementById('drugSearch').value = potentialDrugName;
-        
-        // Switch to text tab and perform search
-        const textTab = new bootstrap.Tab(document.getElementById('text-tab'));
-        textTab.show();
-        setTimeout(() => performSearch(), 500);
-      }
-    }
-
-    // OCR Functions
-    async function handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const progressDiv = document.getElementById('ocrProgress');
-      const resultDiv = document.getElementById('ocrResult');
-      const progressBar = document.getElementById('ocrProgressBar');
-      
-      progressDiv.style.display = 'block';
-      resultDiv.style.display = 'none';
-
-      try {
-        // Check if Tesseract is available
-        if (typeof Tesseract === 'undefined') {
-          throw new Error('OCR kütüphanesi yüklenemedi');
-        }
-
-        const worker = await Tesseract.createWorker();
-        await worker.loadLanguage('eng+tur');
-        await worker.initialize('eng+tur');
-        
-        const { data: { text } } = await worker.recognize(file, {
-          logger: m => {
-            if (m.status === 'recognizing text') {
-              progressBar.style.width = (m.progress * 100) + '%';
-            }
-          }
-        });
-        
-        await worker.terminate();
-
-        document.getElementById('ocrResultText').textContent = text;
-        resultDiv.style.display = 'block';
-        progressDiv.style.display = 'none';
-
-        // Extract medicine names from OCR text
-        const words = text.split(/\s+/).filter(word => word.length > 2);
-        let bestMatch = '';
-        
-        // Look for known medicine names in OCR text
-        for (let medicine of TURKISH_MEDICINES) {
-          if (text.toLowerCase().includes(medicine.name.toLowerCase()) ||
-              text.toLowerCase().includes(medicine.active_ingredient.toLowerCase())) {
-            bestMatch = medicine.name;
-            break;
-          }
-        }
-        
-        if (!bestMatch && words.length > 0) {
-          bestMatch = words[0];
-        }
-        
-        if (bestMatch) {
-          document.getElementById('drugSearch').value = bestMatch;
-          
-          // Switch to text tab
-          const textTab = new bootstrap.Tab(document.getElementById('text-tab'));
-          textTab.show();
-          
-          showAlert('OCR işlemi tamamlandı! Otomatik arama başlatılıyor...', 'success');
-          setTimeout(() => performSearch(), 1000);
-        }
-
-      } catch (error) {
-        console.error('OCR error:', error);
-        progressDiv.style.display = 'none';
-        showAlert('OCR işlemi başarısız: ' + error.message, 'danger');
-      }
-    }
-
-    // Cabinet Management Functions
-    function addMedicine(event) {
-      event.preventDefault();
-      
-      const name = document.getElementById('medicineName').value.trim();
-      const activeIngredients = document.getElementById('activeIngredients').value.trim();
-      const expiryDate = document.getElementById('expiryDate').value;
-      const dosageNote = document.getElementById('dosageNote').value.trim();
-      const quantity = parseInt(document.getElementById('quantity').value) || 1;
-
-      if (!name || !expiryDate) {
-        showAlert('İlaç adı ve son kullanma tarihi zorunludur.', 'warning');
-        return;
-      }
-
-      const medicine = {
-        id: Date.now().toString(),
-        name,
-        activeIngredients,
-        expiryDate,
-        dosageNote,
-        quantity,
-        addedDate: new Date().toISOString()
-      };
-
-      medicines.push(medicine);
-      saveMedicines();
-      loadMedicines();
-      checkExpiryDates();
-      
-      // Clear form
-      document.getElementById('addMedicineForm').reset();
-      document.getElementById('quantity').value = '1';
-      
-      showAlert('İlaç dolaba eklendi.', 'success');
-    }
-
-    function addToCabinet(drugName, activeIngredient) {
-      document.getElementById('medicineName').value = drugName;
-      document.getElementById('activeIngredients').value = activeIngredient;
-      
-      // Scroll to cabinet section
-      document.getElementById('cabinet').scrollIntoView({ behavior: 'smooth' });
-      
-      // Focus on expiry date field
-      setTimeout(() => {
-        document.getElementById('expiryDate').focus();
-      }, 500);
-    }
-
-    function removeMedicine(id) {
-      if (confirm('Bu ilacı dolabınızdan kaldırmak istediğinize emin misiniz?')) {
-        medicines = medicines.filter(med => med.id !== id);
-        saveMedicines();
-        loadMedicines();
-        checkExpiryDates();
-        showAlert('İlaç dolabından kaldırıldı.', 'info');
-      }
-    }
-
-    function loadMedicines() {
-      const listDiv = document.getElementById('medicineList');
-      
-      if (medicines.length === 0) {
-        listDiv.innerHTML = `
-          <div class="alert alert-info">
-            <i class="fas fa-info-circle me-2"></i>
-            Henüz dolabınızda kayıtlı ilaç bulunmuyor.
-          </div>
-        `;
-        return;
-      }
-
-      let html = '<h4 class="mb-3">Dolabınızdaki İlaçlar</h4>';
-      
-      medicines.forEach(medicine => {
-        const expiryDate = new Date(medicine.expiryDate);
-        const today = new Date();
-        const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
-        
-        let statusClass = 'good';
-        let statusIcon = 'fa-check-circle';
-        let statusText = 'İyi durumda';
-        
-        if (daysUntilExpiry < 0) {
-          statusClass = 'expired';
-          statusIcon = 'fa-times-circle';
-          statusText = `${Math.abs(daysUntilExpiry)} gün önce sona erdi`;
-        } else if (daysUntilExpiry <= 30) {
-          statusClass = 'warning';
-          statusIcon = 'fa-exclamation-triangle';
-          statusText = `${daysUntilExpiry} gün sonra sona erecek`;
-        }
-
-        html += `
-          <div class="cabinet-item card mb-3 ${statusClass}">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start">
-                <div class="flex-grow-1">
-                  <h5 class="card-title">${medicine.name}</h5>
-                  <div class="row">
-                    <div class="col-md-6">
-                      ${medicine.activeIngredients ? `<small class="text-muted"><strong>Etken Maddeler:</strong> ${medicine.activeIngredients}</small><br>` : ''}
-                      <small class="text-muted"><strong>Son Kullanma:</strong> ${new Date(medicine.expiryDate).toLocaleDateString('tr-TR')}</small><br>
-                      ${medicine.dosageNote ? `<small class="text-muted"><strong>Doz:</strong> ${medicine.dosageNote}</small><br>` : ''}
-                      <small class="text-muted"><strong>Adet:</strong> ${medicine.quantity}</small>
-                    </div>
-                    <div class="col-md-6">
-                      <span class="badge bg-${statusClass === 'good' ? 'success' : statusClass === 'warning' ? 'warning' : 'danger'}">
-                        <i class="fas ${statusIcon} me-1"></i>${statusText}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="ms-3">
-                  <button class="btn btn-outline-danger btn-sm" onclick="removeMedicine('${medicine.id}')">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      listDiv.innerHTML = html;
-    }
-
-    function checkExpiryDates() {
-      const warningsDiv = document.getElementById('cabinetWarnings');
-      const expiringSoon = medicines.filter(med => {
-        const expiryDate = new Date(med.expiryDate);
-        const today = new Date();
-        const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
-        return daysUntilExpiry <= 30 && daysUntilExpiry >= 0;
-      });
-
-      const expired = medicines.filter(med => {
-        const expiryDate = new Date(med.expiryDate);
-        const today = new Date();
-        return expiryDate < today;
-      });
-
-      let warningsHtml = '';
-
-      if (expired.length > 0) {
-        warningsHtml += `
-          <div class="alert alert-danger">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            <strong>Süresi Geçmiş İlaçlar:</strong> ${expired.map(med => med.name).join(', ')}
-          </div>
-        `;
-      }
-
-      if (expiringSoon.length > 0) {
-        warningsHtml += `
-          <div class="alert alert-warning">
-            <i class="fas fa-clock me-2"></i>
-            <strong>Yakında Süresi Dolacak İlaçlar:</strong> ${expiringSoon.map(med => med.name).join(', ')}
-          </div>
-        `;
-      }
-
-      warningsDiv.innerHTML = warningsHtml;
-    }
-
-    function clearCabinet() {
-      if (confirm('Dolabınızdaki tüm ilaçları silmek istediğinize emin misiniz?')) {
-        medicines = [];
-        saveMedicines();
-        loadMedicines();
-        checkExpiryDates();
-        showAlert('Dolap temizlendi.', 'info');
-      }
-    }
-
-    function exportData() {
-      const data = {
-        medicines,
-        favorites,
-        exportDate: new Date().toISOString()
-      };
-      
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'ilac-dolabi-' + new Date().toISOString().split('T')[0] + '.json';
-      a.click();
-      URL.revokeObjectURL(url);
-      
-      showAlert('Veriler dışa aktarıldı.', 'success');
-    }
-
-    function importData(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          
-          if (data.medicines && Array.isArray(data.medicines)) {
-            medicines = data.medicines;
-            saveMedicines();
-            loadMedicines();
-            checkExpiryDates();
-          }
-          
-          if (data.favorites && Array.isArray(data.favorites)) {
-            favorites = data.favorites;
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-          }
-          
-          showAlert('Veriler başarıyla içe aktarıldı.', 'success');
-        } catch (error) {
-          showAlert('Dosya formatı hatalı.', 'danger');
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    // Favorites Functions
-    function toggleFavorite(drugName) {
-      const index = favorites.indexOf(drugName);
-      if (index > -1) {
-        favorites.splice(index, 1);
-      } else {
-        favorites.push(drugName);
-      }
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-      
-      // Update UI
-      const stars = document.querySelectorAll('.favorite-star');
-      stars.forEach(star => {
-        if (star.onclick.toString().includes(drugName)) {
-          star.classList.toggle('text-warning');
-          star.classList.toggle('text-muted');
-        }
-      });
-    }
-
-    // Drug Details Modal
-    function showDrugDetails(index) {
-      if (!window.currentSearchResults || !window.currentSearchResults[index]) return;
-      
-      const drug = window.currentSearchResults[index];
-      
-      document.getElementById('drugModalTitle').textContent = drug.name;
-      
-      let html = '<div class="row">';
-      
-      // Basic Information
-      html += '<div class="col-md-6"><h6>Temel Bilgiler</h6>';
-      html += `<p><strong>Marka Adı:</strong> ${drug.name}</p>`;
-      html += `<p><strong>Etken Madde:</strong> ${drug.active_ingredient}</p>`;
-      html += `<p><strong>Üretici:</strong> ${drug.manufacturer}</p>`;
-      html += `<p><strong>Dozaj Formu:</strong> ${drug.dosage_form}</p>`;
-      html += `<p><strong>Güç:</strong> ${drug.strength}</p>`;
-      html += `<p><strong>Kategori:</strong> ${drug.category}</p>`;
-      html += `<p><strong>Reçete:</strong> ${drug.prescription ? 'Reçeteli' : 'Reçetesiz'}</p>`;
-      html += '</div>';
-      
-      // Clinical Information
-      html += '<div class="col-md-6"><h6>Klinik Bilgiler</h6>';
-      html += `<p><strong>Kullanım Alanı:</strong> ${drug.usage}</p>`;
-      html += `<p class="text-danger"><strong>Uyarılar:</strong> ${drug.warnings}</p>`;
-      html += '</div>';
-      
-      html += '</div>';
-      
-      // Additional Information
-      html += '<div class="mt-3">';
-      html += '<h6>Kullanım Notları</h6>';
-      html += '<ul class="list-unstyled">';
-      html += '<li><i class="fas fa-info-circle text-info me-2"></i>Bu bilgiler sadece genel amaçlıdır.</li>';
-      html += '<li><i class="fas fa-user-md text-warning me-2"></i>Kullanım öncesi doktorunuza danışın.</li>';
-      html += '<li><i class="fas fa-exclamation-triangle text-danger me-2"></i>Prospektüsü okuyun.</li>';
-      html += '</ul>';
-      html += '</div>';
-      
-      document.getElementById('drugModalBody').innerHTML = html;
-    }
-
-    // Utility Functions
-    function saveMedicines() {
-      localStorage.setItem('medicines', JSON.stringify(medicines));
-    }
-
-    function showAlert(message, type = 'info') {
-      const alertDiv = document.createElement('div');
-      alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-      alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
-      alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      `;
-      
-      document.body.appendChild(alertDiv);
-      
-      // Auto remove after 5 seconds
-      setTimeout(() => {
-        if (alertDiv.parentNode) {
-          alertDiv.remove();
-        }
-      }, 5000);
-    }
-
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', function() {
-      if (qrScanner) {
-        qrScanner.stop();
-        qrScanner.destroy();
-      }
-    });
-
-    // Error handling for failed script loads
-    window.addEventListener('error', function(e) {
-      if (e.filename && (e.filename.includes('qr-scanner') || e.filename.includes('tesseract'))) {
-        console.warn('External library failed to load:', e.filename);
-      }
-    });
-  </script>
-</body>
-</html>
